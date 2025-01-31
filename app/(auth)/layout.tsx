@@ -17,6 +17,7 @@ import {
   SidebarProvider,
   SidebarTrigger,
 } from "@/components/ui/sidebar";
+import { Toaster } from "@/components/ui/toaster";
 
 export default async function AuthLayout({
   children,
@@ -50,6 +51,8 @@ export default async function AuthLayout({
         </header>
 
         {children}
+
+        <Toaster />
       </SidebarInset>
     </SidebarProvider>
   );

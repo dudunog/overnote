@@ -21,7 +21,7 @@ export default function MenuItem({
       onClick={action}
       title={title}
     >
-      <svg className="remix fill-current h-full w-full">{icon}</svg>
+      {icon}
     </button>
   );
 }

@@ -19,6 +19,8 @@ model User {
   image         String?
   accounts      Account[]
   sessions      Session[]
+  notes         Note[]
+  shared_notes  SharedNote[] @relation("UserSharedNotes")
 }
 
 model Account {
@@ -54,4 +56,30 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Note {
+  id          String   @id @default(cuid())
+  content     String
+  color       String
+  public      Boolean  @default(false)
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  userId      String
+  user        User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  shared_with SharedNote[] @relation("NoteSharedWith")
+}
+
+model SharedNote {
+  id          String   @id @default(cuid())
+  createdAt   DateTime @default(now()) @map("created_at")
+  updatedAt   DateTime @updatedAt @map("updated_at")
+
+  noteId      String
+  note        Note @relation("NoteSharedWith", fields: [noteId], references: [id], onDelete: Cascade)
+
+  userId      String
+  user        User @relation("UserSharedNotes", fields: [userId], references: [id], onDelete: Cascade)
 }

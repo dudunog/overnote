@@ -1,7 +1,7 @@
 "use client";
 
 import Highlight from "@tiptap/extension-highlight";
-import { EditorContent, useEditor } from "@tiptap/react";
+import { EditorContent, EditorEvents, useEditor } from "@tiptap/react";
 import MenuBar from "./menu-bar";
 import StarterKit from "@tiptap/starter-kit";
 import TaskItem from "@tiptap/extension-task-item";
@@ -11,9 +11,14 @@ import CharacterCount from "@tiptap/extension-character-count";
 interface TiptapProps {
   isEditorReady: boolean;
   onEditorIsReady: () => void;
+  onUpdateContent: (props: EditorEvents["update"]) => void;
 }
 
-const Tiptap = ({ isEditorReady, onEditorIsReady }: TiptapProps) => {
+const Tiptap = ({
+  isEditorReady,
+  onEditorIsReady,
+  onUpdateContent,
+}: TiptapProps) => {
   const editor = useEditor({
     extensions: [
       StarterKit.configure(),
@@ -25,6 +30,7 @@ const Tiptap = ({ isEditorReady, onEditorIsReady }: TiptapProps) => {
       }),
     ],
     onCreate: onEditorIsReady,
+    onUpdate: onUpdateContent,
   });
 
   if (!isEditorReady) {
