@@ -9,12 +9,14 @@ import TaskList from "@tiptap/extension-task-list";
 import CharacterCount from "@tiptap/extension-character-count";
 
 interface TiptapProps {
+  initialContent?: string;
   isEditorReady: boolean;
   onEditorIsReady: () => void;
   onUpdateContent: (props: EditorEvents["update"]) => void;
 }
 
 const Tiptap = ({
+  initialContent,
   isEditorReady,
   onEditorIsReady,
   onUpdateContent,
@@ -29,14 +31,14 @@ const Tiptap = ({
         limit: 10000,
       }),
     ],
+    content: initialContent || undefined,
     onCreate: onEditorIsReady,
     onUpdate: onUpdateContent,
   });
 
   if (!isEditorReady) {
     return (
-      <div className="flex flex-1 flex-col gap-4 pt-0">
-        <div className="h-10 w-80 aspect-video rounded-xl bg-muted/50" />
+      <div className="mt-6 flex flex-1 flex-col gap-4 pt-0">
         <div className="h-60 aspect-video rounded-xl bg-muted/50" />
       </div>
     );

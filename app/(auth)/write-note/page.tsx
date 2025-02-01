@@ -1,43 +1,42 @@
 "use client";
 
-import Tiptap from "@/components/tip-tap";
-import { Switch } from "@/components/ui/switch";
+import NoteEditor from "@/components/note-editor";
 import { getRandomColor } from "@/constants/colors";
-import { useDebounce } from "@/hooks/use-debounce";
-import { useNotes } from "@/hooks/use-notes";
-import { EditorEvents } from "@tiptap/react";
+import { UpdateNoteDTO, useNotes } from "@/hooks/use-notes";
 import { Lightbulb } from "lucide-react";
-import { startTransition, useCallback, useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { startTransition, useCallback, useState } from "react";
 
 export default function Page() {
   const [isEditorReady, setIsEditorReady] = useState(false);
-  const { createNote } = useNotes();
-  const [noteContent, setNoteContent] = useState("");
-  const [isPublicNote, setIsPublicNote] = useState(false);
-  const debounceContent = useDebounce(noteContent, 700);
+  const { createNote, updateNote } = useNotes();
+  const router = useRouter();
 
-  const handleUpdateContent = useCallback((props: EditorEvents["update"]) => {
-    setNoteContent(props.editor.getHTML());
-  }, []);
+  const handleSaveNote = useCallback(
+    (note: UpdateNoteDTO) => {
+      const noteExists = note.id;
 
-  const handleSaveNoteContent = useCallback(
-    (noteContentToSave: string) => {
       startTransition(async () => {
-        await createNote({
-          content: noteContentToSave,
-          color: getRandomColor(),
-          public: isPublicNote,
-        });
+        if (noteExists) {
+          await updateNote({
+            id: note.id,
+            content: note.content,
+            color: getRandomColor(),
+            public: note.public,
+          });
+        } else {
+          const createdNote = await createNote({
+            content: note.content,
+            color: getRandomColor(),
+            public: note.public,
+          });
+
+          router.push(`/write-note/${createdNote?.id}`);
+        }
       });
     },
-    [createNote, getRandomColor, isPublicNote]
+    [createNote, router, updateNote]
   );
-
-  useEffect(() => {
-    if (debounceContent) {
-      handleSaveNoteContent(noteContent);
-    }
-  }, [debounceContent]);
 
   return (
     <div className="px-6 py-2">
@@ -48,18 +47,10 @@ export default function Page() {
         </div>
       )}
 
-      <div className="mb-5 flex items-center gap-2 justify-end">
-        Public{" "}
-        <Switch
-          checked={isPublicNote}
-          onCheckedChange={(checked) => setIsPublicNote(checked)}
-        />
-      </div>
-
-      <Tiptap
-        isEditorReady={isEditorReady}
+      <NoteEditor
+        note={undefined}
+        onUpdateNote={handleSaveNote}
         onEditorIsReady={() => setIsEditorReady(true)}
-        onUpdateContent={handleUpdateContent}
       />
     </div>
   );

@@ -7,6 +7,8 @@ const notes = [
     content:
       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores, neque quibusdam nisi eaque ea iste accusamus dolores vel, tenetur debitis doloribus porro cum impedit odit eos nihil. Deserunt, corrupti dignissimos!",
     color: "#FFAB91",
+    public: true,
+    createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
@@ -14,6 +16,8 @@ const notes = [
     content:
       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores, neque quibusdam nisi eaque ea iste accusamus dolores vel, tenetur debitis doloribus porro cum impedit odit eos nihil. Deserunt, corrupti dignissimos!",
     color: "#FFCC80",
+    public: true,
+    createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
@@ -21,6 +25,8 @@ const notes = [
     content:
       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores, neque quibusdam nisi eaque ea iste accusamus dolores vel, tenetur debitis doloribus porro cum impedit odit eos nihil. Deserunt, corrupti dignissimos! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores, neque quibusdam nisi eaque ea iste accusamus dolores vel, tenetur debitis doloribus porro cum impedit odit eos nihil. Deserunt, corrupti dignissimos! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores, neque quibusdam nisi eaque ea iste accusamus dolores vel, tenetur debitis doloribus porro cum impedit odit eos nihil. Deserunt, corrupti dignissimos! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores, neque quibusdam nisi eaque ea iste accusamus dolores vel, tenetur debitis doloribus porro cum impedit odit eos nihil. Deserunt, corrupti dignissimos! Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores, neque quibusdam nisi eaque ea iste accusamus dolores vel, tenetur debitis doloribus porro cum impedit odit eos nihil. Deserunt, corrupti dignissimos!",
     color: "#E7ED9C",
+    public: true,
+    createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
@@ -28,6 +34,8 @@ const notes = [
     content:
       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores, neque quibusdam nisi eaque ea iste accusamus dolores vel, tenetur debitis doloribus porro cum impedit odit eos nihil. Deserunt, corrupti dignissimos!",
     color: "#82DEEA",
+    public: true,
+    createdAt: new Date(),
     updatedAt: new Date(),
   },
   {
@@ -35,6 +43,8 @@ const notes = [
     content:
       "Lorem, ipsum dolor sit amet consectetur adipisicing elit. Maiores, neque quibusdam nisi eaque ea iste accusamus dolores vel, tenetur debitis doloribus porro cum impedit odit eos nihil. Deserunt, corrupti dignissimos!",
     color: "#CF94DA",
+    public: true,
+    createdAt: new Date(),
     updatedAt: new Date(),
   },
 ];

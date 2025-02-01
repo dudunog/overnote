@@ -6,6 +6,8 @@ import { Note } from "@/types/note";
 
 type CreateNoteDTO = Omit<Note, "id" | "createdAt" | "updatedAt">;
 
+export type UpdateNoteDTO = Omit<Note, "createdAt" | "updatedAt">;
+
 export function useNotes() {
   const { toast } = useToast();
 
@@ -18,13 +20,44 @@ export function useNotes() {
         body: JSON.stringify(noteData),
       });
 
-      console.log("response:", response);
+      toast({
+        variant: "primary",
+        description: "Note created successfully!",
+        duration: 3000,
+      });
 
       return await response.json();
     } catch (error) {
       toast({
         variant: "destructive",
-        description: "Erro ao criar nota",
+        description: "Erro creating note",
+        duration: 3000,
+      });
+
+      console.error(error);
+    }
+  }
+
+  async function updateNote(
+    noteData: UpdateNoteDTO
+  ): Promise<Note | undefined> {
+    try {
+      const response = await api(`/notes/${noteData.id}/update`, {
+        method: "PUT",
+        body: JSON.stringify(noteData),
+      });
+
+      toast({
+        variant: "primary",
+        description: "Note updated successfully!",
+        duration: 3000,
+      });
+
+      return await response.json();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Error updating note",
         duration: 3000,
       });
 
@@ -34,5 +67,6 @@ export function useNotes() {
 
   return {
     createNote,
+    updateNote,
   };
 }
