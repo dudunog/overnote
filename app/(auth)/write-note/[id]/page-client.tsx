@@ -10,8 +10,9 @@ import { getAvatarFallback } from "@/lib/get-avatar-fallback";
 import { Lightbulb } from "lucide-react";
 import { User } from "next-auth";
 import { useRouter } from "next/navigation";
-import { useCallback } from "react";
+import { useCallback, useTransition } from "react";
 import { motion } from "framer-motion";
+import { useNotes } from "@/hooks/use-notes";
 
 function Skeleton() {
   return (
@@ -27,6 +28,9 @@ function Skeleton() {
       <div>
         <div className="h-72 w-full aspect-video rounded-xl bg-muted/50" />
       </div>
+      <div className="mt-3 flex justify-end">
+        <div className="h-10 w-28 aspect-video rounded-xl bg-muted/50" />
+      </div>
     </div>
   );
 }
@@ -39,11 +43,25 @@ export default function UpdateNotePageClient({
   user,
 }: UpdateNotePageClientProps) {
   const { note, isFetchNoteError, isEditorReady } = useWriteNote();
+  const { deleteNote } = useNotes();
   const router = useRouter();
+  const [isPending, startTransition] = useTransition();
 
   const handleGoHome = useCallback(() => {
     router.push("/dashboard");
   }, [router]);
+
+  const handleDeleteNote = useCallback(() => {
+    startTransition(async () => {
+      await deleteNote(note?.id || "", user?.id || "");
+    });
+
+    router.push("/my-notes");
+  }, [deleteNote, user]);
+
+  const name = note?.user?.name ?? note?.user?.email;
+
+  const avatarFallback = getAvatarFallback(name || "");
 
   if (isFetchNoteError?.error) {
     return (
@@ -61,10 +79,6 @@ export default function UpdateNotePageClient({
       </div>
     );
   }
-
-  const name = note?.user?.name ?? note?.user?.email;
-
-  const avatarFallback = getAvatarFallback(name || "");
 
   return (
     <div className="px-6 py-2">
@@ -134,6 +148,26 @@ export default function UpdateNotePageClient({
       >
         <NoteEditor />
       </motion.div>
+
+      {isEditorReady && note?.userId === user?.id && (
+        <motion.div
+          className="mt-3 flex justify-end"
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.6 }}
+        >
+          <div className="mt-3 flex justify-end">
+            <Button
+              variant="destructive"
+              onClick={handleDeleteNote}
+              disabled={isPending}
+              isLoading={isPending}
+            >
+              Delete note
+            </Button>
+          </div>
+        </motion.div>
+      )}
     </div>
   );
 }

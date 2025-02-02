@@ -68,8 +68,33 @@ export function useNotes() {
     }
   }
 
+  async function deleteNote(noteId: string, userId: string): Promise<void> {
+    try {
+      const response = await api(`/users/${userId}/notes/${noteId}/delete`, {
+        method: "DELETE",
+      });
+
+      toast({
+        variant: "primary",
+        description: "Note deleted successfully!",
+        duration: 3000,
+      });
+
+      return await response.json();
+    } catch (error) {
+      toast({
+        variant: "destructive",
+        description: "Error deleting note",
+        duration: 3000,
+      });
+
+      console.error(error);
+    }
+  }
+
   return {
     createNote,
     updateNote,
+    deleteNote,
   };
 }
