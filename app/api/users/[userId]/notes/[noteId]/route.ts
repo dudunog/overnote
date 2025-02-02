@@ -26,6 +26,9 @@ export async function GET(req: Request, { params }: ParamsProps) {
       where: {
         id: noteId,
       },
+      include: {
+        user: true,
+      },
     });
 
     if (!note?.public && note?.userId !== userId) {
@@ -35,7 +38,17 @@ export async function GET(req: Request, { params }: ParamsProps) {
       );
     }
 
-    return Response.json(note);
+    const { user, ...noteData } = note;
+
+    const response = {
+      ...noteData,
+      user: {
+        name: user.name,
+        email: user.email,
+      },
+    };
+
+    return Response.json(response);
   } catch (err) {
     console.error(err);
     return Response.json({ error: "Error fetching note" }, { status: 500 });

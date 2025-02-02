@@ -47,7 +47,7 @@ export default function UpdateNotePageClient({
     );
   }
 
-  const name = user?.name ?? user?.email;
+  const name = note?.user?.name ?? note?.user?.email;
 
   const avatarFallback = getAvatarFallback(name || "");
 
