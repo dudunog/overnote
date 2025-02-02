@@ -6,13 +6,23 @@ import { useRouter } from "next/navigation";
 import { useCallback } from "react";
 import { formatDate } from "@/lib/format-date";
 import { motion } from "framer-motion";
+import ViewNotesLink from "./view-notes-link";
 
 interface NotesListProps {
   notes: Note[];
+  maxNotes?: number;
+  variant?: "default" | "limited";
 }
 
-export default function NotesList({ notes }: NotesListProps) {
+export default function NotesList({
+  notes,
+  maxNotes = 5,
+  variant = "default",
+}: NotesListProps) {
   const router = useRouter();
+  const displayedNotes =
+    variant === "limited" ? notes.slice(0, maxNotes) : notes;
+  const hasMoreNotes = notes.length > maxNotes;
 
   const handleGoToNotePage = useCallback(
     (noteId: string) => {
@@ -23,7 +33,7 @@ export default function NotesList({ notes }: NotesListProps) {
 
   return (
     <div className="flex flex-wrap gap-4">
-      {notes.map((note, index) => (
+      {displayedNotes.map((note, index) => (
         <motion.div
           key={note.id}
           className="flex flex-col justify-between w-56 h-40 rounded-lg cursor-pointer"
@@ -55,6 +65,12 @@ export default function NotesList({ notes }: NotesListProps) {
           </div>
         </motion.div>
       ))}
+
+      {variant === "limited" && hasMoreNotes && (
+        <div className="w-full text-center">
+          <ViewNotesLink linkText="See more notes" url="/my-notes" />
+        </div>
+      )}
     </div>
   );
 }

@@ -1,3 +1,4 @@
+import NewNoteFloatingButton from "@/components/new-note-floating-button";
 import NotesList from "@/components/notes-list";
 import { api } from "@/data/api";
 import { auth } from "@/lib/auth";
@@ -23,6 +24,8 @@ export default async function Page() {
       </div>
 
       <NotesList notes={notes} />
+
+      <NewNoteFloatingButton />
     </div>
   );
 }
