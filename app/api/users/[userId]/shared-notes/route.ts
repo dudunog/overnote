@@ -25,7 +25,9 @@ export async function GET(req: Request, { params }: ParamsProps) {
         userId: {
           not: userId,
         },
-        public: true,
+        visibility: {
+          in: ["PUBLIC", "READ_ONLY"],
+        },
       },
       orderBy: {
         createdAt: "desc",

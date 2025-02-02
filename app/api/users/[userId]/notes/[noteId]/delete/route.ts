@@ -34,8 +34,10 @@ export async function DELETE(req: Request, { params }: ParamsProps) {
       },
     });
 
-    if (note?.userId !== userId) {
-      return Response.json("This note belogs to another user", { status: 400 });
+    if (note?.visibility === "PRIVATE" && note?.userId !== userId) {
+      return Response.json("This note belongs to another user", {
+        status: 400,
+      });
     }
 
     const response = await prisma.note.delete({

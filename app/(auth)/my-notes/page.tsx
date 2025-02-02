@@ -25,7 +25,7 @@ export default async function Page() {
 
       <NotesList notes={notes} />
 
-      <NewNoteFloatingButton />
+      {notes && notes.length > 0 && <NewNoteFloatingButton />}
     </div>
   );
 }

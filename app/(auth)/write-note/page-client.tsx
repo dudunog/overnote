@@ -5,13 +5,14 @@ import { Lightbulb } from "lucide-react";
 import { useWriteNote, WriteNoteProvider } from "@/contexts/write-note-context";
 import { Note } from "@/types/note";
 import { motion } from "framer-motion";
+import { User } from "next-auth";
 
 interface WriteNotePageClientProps {
-  userId: string;
+  user: User;
 }
 
 export default function WriteNotePageClient({
-  userId,
+  user,
 }: WriteNotePageClientProps) {
   const { isEditorReady } = useWriteNote();
 
@@ -19,9 +20,10 @@ export default function WriteNotePageClient({
     <WriteNoteProvider
       initialNote={
         {
-          userId: userId,
+          userId: user?.id,
         } as Note
       }
+      user={user}
     >
       <div className="px-6 py-2">
         {isEditorReady && (

@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { NoteVisibility } from "@/types/note";
 import { z } from "zod";
 
 type ParamsProps = {
@@ -19,19 +20,19 @@ export async function PUT(req: Request, { params }: ParamsProps) {
   }
 
   try {
-    const { id, content, color, isPublic, userId } = z
+    const { id, content, color, visibility, userId } = z
       .object({
         id: z.string(),
         content: z.string(),
         color: z.string(),
-        isPublic: z.boolean(),
+        visibility: z.enum(NoteVisibility),
         userId: z.string(),
       })
       .parse({
         id: noteIdParam,
         content: body.content,
         color: body.color,
-        isPublic: body.public,
+        visibility: body.visibility,
         userId: userIdParam,
       });
 
@@ -41,15 +42,17 @@ export async function PUT(req: Request, { params }: ParamsProps) {
       },
     });
 
-    if (note?.userId !== userId) {
-      return Response.json("This note belogs to another user", { status: 400 });
+    if (note?.visibility === "PRIVATE" && note?.userId !== userId) {
+      return Response.json("This note belongs to another user", {
+        status: 400,
+      });
     }
 
     const updatedNote = await prisma.note.update({
       data: {
         content,
         color,
-        public: isPublic,
+        visibility,
       },
       where: {
         id,

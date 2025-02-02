@@ -13,8 +13,9 @@ export default async function Page() {
           userId: "",
         } as Note
       }
+      user={session?.user}
     >
-      <WriteNotePageClient userId={session?.user?.id || ""} />
+      <WriteNotePageClient user={session?.user ?? {}} />
     </WriteNoteProvider>
   );
 }

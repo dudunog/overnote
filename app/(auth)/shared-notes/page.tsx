@@ -23,9 +23,14 @@ export default async function Page() {
         <StickyNote size={30} />
       </div>
 
-      <NotesList notes={notes} />
+      <NotesList
+        notes={notes}
+        noItemsTitle="No notes shared with you!"
+        noItemsMessage="It looks like no one has shared any notes with you yet. Check back later or ask your friends to share their notes!"
+        showWriteNoteButton={false}
+      />
 
-      <NewNoteFloatingButton />
+      {notes && notes.length > 0 && <NewNoteFloatingButton />}
     </div>
   );
 }

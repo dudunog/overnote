@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/prisma";
+import { NoteVisibility } from "@/types/note";
 import { z } from "zod";
 
 type ParamsProps = {
@@ -18,17 +19,17 @@ export async function POST(req: Request, { params }: ParamsProps) {
   }
 
   try {
-    const { content, color, isPublic, userId } = z
+    const { content, color, visibility, userId } = z
       .object({
         content: z.string(),
         color: z.string(),
-        isPublic: z.boolean(),
+        visibility: z.enum(NoteVisibility),
         userId: z.string(),
       })
       .parse({
         content: body.content,
         color: body.color,
-        isPublic: body.public,
+        visibility: body.visibility,
         userId: userIdParam,
       });
 
@@ -36,7 +37,7 @@ export async function POST(req: Request, { params }: ParamsProps) {
       data: {
         content,
         color,
-        public: isPublic,
+        visibility,
         userId,
       },
     });

@@ -31,7 +31,11 @@ export async function GET(req: Request, { params }: ParamsProps) {
       },
     });
 
-    if (!note?.public && note?.userId !== userId) {
+    if (!note) {
+      return Response.json({ error: "Note not found." }, { status: 404 });
+    }
+
+    if (note?.visibility === "PRIVATE" && note?.userId !== userId) {
       return Response.json(
         { error: "Seems that you don't have access to this note." },
         { status: 403 }
@@ -46,6 +50,7 @@ export async function GET(req: Request, { params }: ParamsProps) {
         name: user.name,
         email: user.email,
       },
+      canEdit: note.visibility === "PUBLIC" || note?.userId === userId,
     };
 
     return Response.json(response);

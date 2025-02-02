@@ -4,6 +4,7 @@ import { useCallback } from "react";
 import { useRouter } from "next/navigation";
 import { Pencil } from "lucide-react";
 import { motion } from "framer-motion";
+import { Button } from "./ui/button";
 
 export default function NewNoteFloatingButton() {
   const router = useRouter();
@@ -21,13 +22,13 @@ export default function NewNoteFloatingButton() {
         scale: { type: "spring", visualDuration: 0.4, bounce: 0.5 },
       }}
     >
-      <div
-        className="fixed bottom-7 right-7 transform p-4 flex items-center gap-2 bg-black text-white rounded-xl font-light text-sm cursor-pointer"
+      <Button
+        className="fixed bottom-7 right-7 transform p-4 py-[26px] flex items-center gap-2 bg-black text-white rounded-xl font-light text-sm cursor-pointer"
         onClick={handleGoToWriteNotePage}
       >
         <Pencil size={15} />
         Write note
-      </div>
+      </Button>
     </motion.div>
   );
 }

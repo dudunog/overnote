@@ -20,11 +20,13 @@ export function useNotes() {
         body: JSON.stringify(noteData),
       });
 
-      toast({
-        variant: "primary",
-        description: "Note created successfully!",
-        duration: 3000,
-      });
+      if (response.ok) {
+        toast({
+          variant: "primary",
+          description: "Note created successfully!",
+          duration: 3000,
+        });
+      }
 
       return await response.json();
     } catch (error) {
@@ -39,22 +41,27 @@ export function useNotes() {
   }
 
   async function updateNote(
-    noteData: UpdateNoteDTO
+    noteData: UpdateNoteDTO,
+    userId: string
   ): Promise<Note | undefined> {
     try {
       const response = await api(
-        `/users/${noteData.userId}/notes/${noteData.id}/update`,
+        `/users/${userId}/notes/${noteData.id}/update`,
         {
           method: "PUT",
           body: JSON.stringify(noteData),
         }
       );
 
-      toast({
-        variant: "primary",
-        description: "Note updated successfully!",
-        duration: 3000,
-      });
+      if (response.ok) {
+        toast({
+          variant: "primary",
+          description: "Note updated successfully!",
+          duration: 3000,
+        });
+      } else {
+        throw new Error("Error updating note");
+      }
 
       return await response.json();
     } catch (error) {
@@ -74,11 +81,13 @@ export function useNotes() {
         method: "DELETE",
       });
 
-      toast({
-        variant: "primary",
-        description: "Note deleted successfully!",
-        duration: 3000,
-      });
+      if (response.ok) {
+        toast({
+          variant: "primary",
+          description: "Note deleted successfully!",
+          duration: 3000,
+        });
+      }
 
       return await response.json();
     } catch (error) {

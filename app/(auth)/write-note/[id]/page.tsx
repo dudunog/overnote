@@ -28,6 +28,7 @@ export default async function Page({ params }: PageProps) {
     <WriteNoteProvider
       initialNote={"error" in note ? undefined : note}
       isFetchNoteError={"error" in note ? note : undefined}
+      user={session?.user}
     >
       <UpdateNotePageClient user={session?.user} />
     </WriteNoteProvider>

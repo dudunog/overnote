@@ -4,7 +4,8 @@ import { useDebounce } from "@/hooks/use-debounce";
 import { useNotes } from "@/hooks/use-notes";
 import { getRandomColor } from "@/lib/colors";
 import { ApiRequestError } from "@/types/api";
-import { Note } from "@/types/note";
+import { Note, NoteVisibilityEnum } from "@/types/note";
+import { User } from "next-auth";
 import { useRouter } from "next/navigation";
 import {
   createContext,
@@ -18,14 +19,14 @@ import {
 } from "react";
 
 interface IWriteNoteContext {
-  isPublicNote: boolean;
-  setIsPublicNote: (isPublicNote: boolean) => void;
   noteContent: string;
   setNoteContent: (noteContent: string) => void;
   isEditorReady: boolean;
   setIsEditorReady: (isEditorReady: boolean) => void;
   isFetchNoteError: ApiRequestError | undefined;
   note: Note | undefined;
+  visibility: NoteVisibilityEnum;
+  setVisibility: (visibility: NoteVisibilityEnum) => void;
 }
 
 const WriteNoteContext = createContext<IWriteNoteContext>(
@@ -35,21 +36,23 @@ const WriteNoteContext = createContext<IWriteNoteContext>(
 interface WriteNoteProviderProps {
   initialNote: Note | undefined;
   isFetchNoteError?: ApiRequestError;
+  user?: User;
   children: ReactNode;
 }
 
 export function WriteNoteProvider({
   initialNote,
   isFetchNoteError,
+  user,
   children,
 }: WriteNoteProviderProps) {
   const [noteContent, setNoteContent] = useState(initialNote?.content || "");
-  const [isPublicNote, setIsPublicNote] = useState(
-    initialNote?.public || false
-  );
   const [isEditorReady, setIsEditorReady] = useState(false);
+  const [visibility, setVisibility] = useState(
+    initialNote?.visibility ?? NoteVisibilityEnum.PRIVATE
+  );
   const debounceContent = useDebounce(noteContent, 700);
-  const debounceIsPublic = useDebounce(isPublicNote, 700);
+  const debounceVisibility = useDebounce(visibility, 700);
   const { createNote, updateNote } = useNotes();
 
   const [hasMounted, setHasMounted] = useState(false);
@@ -61,22 +64,27 @@ export function WriteNoteProvider({
       const noteExists = initialNote?.id;
 
       if (noteExists) {
-        await updateNote({
-          id: initialNote?.id || "",
-          content: noteContent,
-          color: initialNote?.color || "",
-          public: isPublicNote,
-          userId: initialNote.userId,
-        });
+        await updateNote(
+          {
+            id: initialNote?.id || "",
+            content: noteContent,
+            color: initialNote?.color || "",
+            visibility: visibility,
+            userId: initialNote.userId,
+          },
+          user?.id || ""
+        );
       } else {
         const createdNote = await createNote({
           content: noteContent,
           color: getRandomColor(),
-          public: isPublicNote,
+          visibility: visibility as NoteVisibilityEnum,
           userId: initialNote?.userId || "",
         });
 
-        router.push(`/write-note/${createdNote?.id}`);
+        if (createdNote) {
+          router.push(`/write-note/${createdNote?.id}`);
+        }
       }
     });
   }, [
@@ -85,7 +93,7 @@ export function WriteNoteProvider({
     initialNote?.userId,
     updateNote,
     noteContent,
-    isPublicNote,
+    visibility,
     createNote,
     router,
   ]);
@@ -99,10 +107,10 @@ export function WriteNoteProvider({
   useEffect(() => {
     if (!hasMounted) return;
 
-    if (debounceIsPublic !== initialNote?.public || !debounceIsPublic) {
+    if (debounceVisibility !== initialNote?.visibility || debounceVisibility) {
       handleUpdateNoteContent();
     }
-  }, [debounceIsPublic]);
+  }, [debounceVisibility]);
 
   useEffect(() => {
     setHasMounted(true);
@@ -112,22 +120,22 @@ export function WriteNoteProvider({
     () => ({
       noteContent,
       setNoteContent,
-      isPublicNote,
-      setIsPublicNote,
       isEditorReady,
       setIsEditorReady,
       isFetchNoteError,
       note: initialNote,
+      visibility,
+      setVisibility,
     }),
     [
       noteContent,
       setNoteContent,
-      isPublicNote,
-      setIsPublicNote,
       isEditorReady,
       setIsEditorReady,
       isFetchNoteError,
       initialNote,
+      visibility,
+      setVisibility,
     ]
   );
 

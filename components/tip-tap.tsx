@@ -7,10 +7,12 @@ import StarterKit from "@tiptap/starter-kit";
 import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import CharacterCount from "@tiptap/extension-character-count";
+import { cn } from "@/lib/utils";
 
 interface TiptapProps {
   initialContent?: string;
   isEditorReady: boolean;
+  editable?: boolean;
   onEditorIsReady: () => void;
   onUpdateContent: (props: EditorEvents["update"]) => void;
 }
@@ -18,6 +20,7 @@ interface TiptapProps {
 const Tiptap = ({
   initialContent,
   isEditorReady,
+  editable = true,
   onEditorIsReady,
   onUpdateContent,
 }: TiptapProps) => {
@@ -32,6 +35,7 @@ const Tiptap = ({
       }),
     ],
     autofocus: true,
+    editable: editable,
     content: initialContent || undefined,
     onCreate: onEditorIsReady,
     onUpdate: onUpdateContent,
@@ -47,8 +51,8 @@ const Tiptap = ({
 
   return (
     <div className="editor p-4">
-      {editor && <MenuBar editor={editor} />}
-      <EditorContent editor={editor} className="mt-8" />
+      {editor && editable && <MenuBar editor={editor} />}
+      <EditorContent editor={editor} className={cn(editable && "mt-8")} />
     </div>
   );
 };

@@ -74,7 +74,7 @@ export default function UpdateNotePageClient({
         </div>
 
         <Button className="mt-5" onClick={handleGoHome}>
-          Go home
+          Go dashboard
         </Button>
       </div>
     );
