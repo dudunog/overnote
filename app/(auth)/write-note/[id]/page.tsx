@@ -1,9 +1,15 @@
 import { api } from "@/data/api";
 import { Note } from "@/types/note";
+import { WriteNoteProvider } from "@/contexts/write-note-context";
 import UpdateNotePageClient from "./page-client";
+import { auth } from "@/lib/auth";
+import { ApiRequestError } from "@/types/api";
 
-async function getNote(noteId: string): Promise<Note> {
-  const response = await api(`/notes/${noteId}`, {
+async function getNote(
+  noteId: string,
+  userId: string
+): Promise<Note | ApiRequestError> {
+  const response = await api(`/users/${userId}/notes/${noteId}`, {
     cache: "no-cache",
   });
   return await response.json();
@@ -14,8 +20,16 @@ interface PageProps {
 }
 
 export default async function Page({ params }: PageProps) {
+  const session = await auth();
   const noteId = params.id;
-  const note = await getNote(noteId);
+  const note = await getNote(noteId, session?.user?.id || "");
 
-  return <UpdateNotePageClient note={note} />;
+  return (
+    <WriteNoteProvider
+      initialNote={"error" in note ? undefined : note}
+      isFetchNoteError={"error" in note ? note : undefined}
+    >
+      <UpdateNotePageClient user={session?.user} />
+    </WriteNoteProvider>
+  );
 }

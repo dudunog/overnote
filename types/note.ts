@@ -3,6 +3,7 @@ export interface Note {
   content: string;
   color: string;
   public: boolean;
+  userId: string;
   createdAt: Date;
   updatedAt: Date;
 }

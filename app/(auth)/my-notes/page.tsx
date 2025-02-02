@@ -1,17 +1,19 @@
 import NotesList from "@/components/notes-list";
 import { api } from "@/data/api";
+import { auth } from "@/lib/auth";
 import { Note } from "@/types/note";
 import { StickyNote } from "lucide-react";
 
-async function getNotes(): Promise<Note[]> {
-  const response = await api("/notes", {
+async function getNotes(userId: string): Promise<Note[]> {
+  const response = await api(`/users/${userId}/notes`, {
     cache: "no-cache",
   });
   return await response.json();
 }
 
 export default async function Page() {
-  const notes = await getNotes();
+  const session = await auth();
+  const notes = await getNotes(session?.user?.id || "");
 
   return (
     <div className="px-6 py-2">

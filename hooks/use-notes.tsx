@@ -15,7 +15,7 @@ export function useNotes() {
     noteData: CreateNoteDTO
   ): Promise<Note | undefined> {
     try {
-      const response = await api("/notes/create", {
+      const response = await api(`/users/${noteData.userId}/notes/create`, {
         method: "POST",
         body: JSON.stringify(noteData),
       });
@@ -42,10 +42,13 @@ export function useNotes() {
     noteData: UpdateNoteDTO
   ): Promise<Note | undefined> {
     try {
-      const response = await api(`/notes/${noteData.id}/update`, {
-        method: "PUT",
-        body: JSON.stringify(noteData),
-      });
+      const response = await api(
+        `/users/${noteData.userId}/notes/${noteData.id}/update`,
+        {
+          method: "PUT",
+          body: JSON.stringify(noteData),
+        }
+      );
 
       toast({
         variant: "primary",
