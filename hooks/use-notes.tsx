@@ -4,9 +4,9 @@ import { api } from "@/data/api";
 import { useToast } from "@/hooks/use-toast";
 import { Note } from "@/types/note";
 
-type CreateNoteDTO = Omit<Note, "id" | "createdAt" | "updatedAt">;
+type CreateNoteDTO = Omit<Note, "id" | "user" | "createdAt" | "updatedAt">;
 
-export type UpdateNoteDTO = Omit<Note, "createdAt" | "updatedAt">;
+export type UpdateNoteDTO = Omit<Note, "user" | "createdAt" | "updatedAt">;
 
 export function useNotes() {
   const { toast } = useToast();
