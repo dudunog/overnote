@@ -13,9 +13,12 @@ import { useWriteNote } from "@/contexts/write-note-context";
 
 export function ShareNotePopover() {
   const { toast } = useToast();
-  const { isPublicNote, setIsPublicNote } = useWriteNote();
+  const { note, isPublicNote, setIsPublicNote } = useWriteNote();
 
   const handleCopyLink = useCallback(() => {
+    const noteLink = `write-note/${note?.id}`;
+    navigator.clipboard.writeText(noteLink);
+
     toast({
       variant: "primary",
       description: "Link copied to clipboard!",

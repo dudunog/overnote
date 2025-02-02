@@ -11,9 +11,24 @@ import { Lightbulb } from "lucide-react";
 import { User } from "next-auth";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import { motion } from "framer-motion";
 
 function Skeleton() {
-  return <div className="h-10 w-80 aspect-video rounded-xl bg-muted/50" />;
+  return (
+    <div>
+      <div className="mb-7 flex flex-col gap-5 justify-between w-full md:flex-row md:gap-10">
+        <div className="h-10 w-80 aspect-video rounded-xl bg-muted/50" />
+        <div className="h-10 w-20 aspect-video rounded-xl bg-muted/50" />
+      </div>
+      <div className="mb-2 flex flex-col gap-2 justify-between md:flex-row md:items-center md:gap-5">
+        <div className="h-10 w-60 aspect-video rounded-xl bg-muted/50" />
+        <div className="h-10 w-40 aspect-video rounded-xl bg-muted/50" />
+      </div>
+      <div>
+        <div className="h-72 w-full aspect-video rounded-xl bg-muted/50" />
+      </div>
+    </div>
+  );
 }
 
 interface UpdateNotePageClientProps {
@@ -54,16 +69,37 @@ export default function UpdateNotePageClient({
   return (
     <div className="px-6 py-2">
       {isEditorReady ? (
-        <div className="flex flex-col">
-          <div className="mb-7 flex flex-col gap-5 justify-between w-full md:flex-row md:gap-10">
+        <motion.div
+          className="flex flex-col"
+          initial="hidden"
+          animate="visible"
+          variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
+        >
+          <motion.div
+            className="mb-7 flex flex-col gap-5 justify-between w-full md:flex-row md:gap-10"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
             <div className="flex items-center gap-2">
               <h2 className="text-4xl font-bold">Write your ideas</h2>
               <Lightbulb size={30} />
             </div>
 
-            <ShareNotePopover />
-          </div>
-          <div className="mb-2 flex flex-col gap-2 justify-between md:flex-row md:items-center md:gap-5">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              <ShareNotePopover />
+            </motion.div>
+          </motion.div>
+          <motion.div
+            className="mb-2 flex flex-col gap-2 justify-between md:flex-row md:items-center md:gap-5"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: 0.3 }}
+          >
             <div className="flex items-center gap-2">
               <span className="font-semibold">Created by:</span>
               <Avatar className="h-8 w-8 rounded-lg">
@@ -85,13 +121,19 @@ export default function UpdateNotePageClient({
                 </span>
               </div>
             )}
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
       ) : (
         <Skeleton />
       )}
 
-      <NoteEditor />
+      <motion.div
+        initial={{ opacity: 0, y: 30 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6, delay: 0.6, ease: "easeOut" }}
+      >
+        <NoteEditor />
+      </motion.div>
     </div>
   );
 }

@@ -12,6 +12,11 @@ import {
 } from "@/components/ui/sidebar";
 import { Toaster } from "@/components/ui/toaster";
 import AppBreadcrumb from "@/components/app-breadcrumb";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Overnote | Dashboard",
+};
 
 export default async function AuthLayout({
   children,

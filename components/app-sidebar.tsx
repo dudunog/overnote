@@ -18,7 +18,7 @@ import { Home, StickyNote } from "lucide-react";
 
 export const SIDEBAR_ITEMS = [
   {
-    title: "Home",
+    title: "Dashboard",
     url: "/dashboard",
     icon: Home,
   },
