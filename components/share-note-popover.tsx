@@ -24,7 +24,7 @@ export function ShareNotePopover() {
       description: "Link copied to clipboard!",
       duration: 3000,
     });
-  }, [toast]);
+  }, [note?.id, toast]);
 
   return (
     <Popover>
