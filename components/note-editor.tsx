@@ -23,6 +23,7 @@ export default function NoteEditor({
   const [noteContent, setNoteContent] = useState(note?.content || "");
   const [isPublicNote, setIsPublicNote] = useState(note?.public || false);
   const debounceContent = useDebounce(noteContent, 700);
+  const debounceIsPublic = useDebounce(isPublicNote, 700);
 
   const handleUpdateContent = useCallback(
     (props: EditorEvents["update"]) => {
@@ -47,6 +48,12 @@ export default function NoteEditor({
       handleUpdateNoteContent();
     }
   }, [debounceContent]);
+
+  useEffect(() => {
+    if (debounceIsPublic !== note?.public) {
+      handleUpdateNoteContent();
+    }
+  }, [debounceIsPublic]);
 
   return (
     <div>

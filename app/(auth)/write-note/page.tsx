@@ -1,7 +1,7 @@
 "use client";
 
 import NoteEditor from "@/components/note-editor";
-import { getRandomColor } from "@/constants/colors";
+import { getRandomColor } from "@/lib/colors";
 import { UpdateNoteDTO, useNotes } from "@/hooks/use-notes";
 import { Lightbulb } from "lucide-react";
 import { useRouter } from "next/navigation";

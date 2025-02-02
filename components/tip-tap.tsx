@@ -31,6 +31,7 @@ const Tiptap = ({
         limit: 10000,
       }),
     ],
+    autofocus: true,
     content: initialContent || undefined,
     onCreate: onEditorIsReady,
     onUpdate: onUpdateContent,

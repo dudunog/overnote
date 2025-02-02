@@ -1,9 +1,10 @@
 "use client";
 
 import { Note } from "@/types/note";
-import { truncate } from "@/utils/truncate";
+import { truncate } from "@/lib/truncate";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";
+import { formatDate } from "@/lib/format-date";
 
 interface NotesListProps {
   notes: Note[];
@@ -14,7 +15,7 @@ export default function NotesList({ notes }: NotesListProps) {
 
   const handleGoToNotePage = useCallback(
     (noteId: string) => {
-      router.push(`/note/${noteId}`);
+      router.push(`/write-note/${noteId}`);
     },
     [router]
   );
@@ -30,10 +31,14 @@ export default function NotesList({ notes }: NotesListProps) {
             backgroundColor: note.color,
           }}
         >
-          <p>{truncate(note.content, 50)}</p>
+          <div>
+            <span
+              dangerouslySetInnerHTML={{ __html: truncate(note.content, 50) }}
+            ></span>
+          </div>
 
           <span className="text-sm text-zinc-600">
-            {note.updatedAt.toLocaleDateString()}
+            Updated {formatDate(note.updatedAt.toString())}
           </span>
         </div>
       ))}

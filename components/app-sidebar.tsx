@@ -19,17 +19,17 @@ import { Home, StickyNote } from "lucide-react";
 const items = [
   {
     title: "Home",
-    url: "dashboard",
+    url: "/dashboard",
     icon: Home,
   },
   {
     title: "My notes",
-    url: "my-notes",
+    url: "/my-notes",
     icon: StickyNote,
   },
   {
     title: "Shared Notes",
-    url: "shared-notes",
+    url: "/shared-notes",
     icon: StickyNote,
   },
 ];
