@@ -16,7 +16,7 @@ import {
 } from "@/components/ui/sidebar";
 import { Home, StickyNote } from "lucide-react";
 
-const items = [
+export const SIDEBAR_ITEMS = [
   {
     title: "Home",
     url: "/dashboard",
@@ -50,7 +50,7 @@ export async function AppSidebar(props: React.ComponentProps<typeof Sidebar>) {
           <SidebarGroupLabel>Application</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {items.map((item) => (
+              {SIDEBAR_ITEMS.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild>
                     <a href={item.url}>
