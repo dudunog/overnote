@@ -18,6 +18,7 @@ import {
   SelectValue,
 } from "./ui/select";
 import { NoteVisibilityEnum } from "@/types/note";
+import { env } from "@/env";
 
 export function ShareNotePopover() {
   const { toast } = useToast();
@@ -31,7 +32,7 @@ export function ShareNotePopover() {
   );
 
   const handleCopyLink = useCallback(() => {
-    const noteLink = `write-note/${note?.id}`;
+    const noteLink = `${env.NEXT_PUBLIC_API_BASE_URL}/write-note/${note?.id}`;
     navigator.clipboard.writeText(noteLink);
 
     toast({
@@ -44,7 +45,9 @@ export function ShareNotePopover() {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <Button variant="outline">Share</Button>
+        <Button variant="outline" className="w-full sm:w-fit">
+          Share
+        </Button>
       </PopoverTrigger>
       <PopoverContent className="w-[370px] mr-6">
         <div className="grid gap-4">

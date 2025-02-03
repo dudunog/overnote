@@ -16,7 +16,7 @@ export interface Note {
     name: string;
     email: string;
   };
-  canEdit: boolean;
+  canEdit?: boolean;
   createdAt: Date;
   updatedAt: Date;
 }

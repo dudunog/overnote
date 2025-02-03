@@ -13,6 +13,7 @@ interface TiptapProps {
   initialContent?: string;
   isEditorReady: boolean;
   editable?: boolean;
+  editorBackgroundColor?: string;
   onEditorIsReady: () => void;
   onUpdateContent: (props: EditorEvents["update"]) => void;
 }
@@ -21,6 +22,7 @@ const Tiptap = ({
   initialContent,
   isEditorReady,
   editable = true,
+  editorBackgroundColor,
   onEditorIsReady,
   onUpdateContent,
 }: TiptapProps) => {
@@ -50,7 +52,12 @@ const Tiptap = ({
   }
 
   return (
-    <div className="editor p-4">
+    <div
+      className="editor p-4"
+      style={{
+        backgroundColor: editorBackgroundColor,
+      }}
+    >
       {editor && editable && <MenuBar editor={editor} />}
       <EditorContent editor={editor} className={cn(editable && "mt-8")} />
     </div>

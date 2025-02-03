@@ -27,6 +27,8 @@ interface IWriteNoteContext {
   note: Note | undefined;
   visibility: NoteVisibilityEnum;
   setVisibility: (visibility: NoteVisibilityEnum) => void;
+  color: string;
+  setColor: (color: string) => void;
 }
 
 const WriteNoteContext = createContext<IWriteNoteContext>(
@@ -47,16 +49,18 @@ export function WriteNoteProvider({
   children,
 }: WriteNoteProviderProps) {
   const [noteContent, setNoteContent] = useState(initialNote?.content || "");
-  const [isEditorReady, setIsEditorReady] = useState(false);
   const [visibility, setVisibility] = useState(
     initialNote?.visibility ?? NoteVisibilityEnum.PRIVATE
   );
-  const debounceContent = useDebounce(noteContent, 700);
-  const debounceVisibility = useDebounce(visibility, 700);
-  const { createNote, updateNote } = useNotes();
-
+  const [color, setColor] = useState(initialNote?.color || "");
+  const [isEditorReady, setIsEditorReady] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
 
+  const debounceContent = useDebounce(noteContent, 700);
+  const debounceVisibility = useDebounce(visibility, 700);
+  const debounceColor = useDebounce(color, 700);
+
+  const { createNote, updateNote } = useNotes();
   const router = useRouter();
 
   const handleUpdateNoteContent = useCallback(() => {
@@ -68,9 +72,9 @@ export function WriteNoteProvider({
           {
             id: initialNote?.id || "",
             content: noteContent,
-            color: initialNote?.color || "",
+            color: color || "",
             visibility: visibility,
-            userId: initialNote.userId,
+            userId: initialNote.userId || "",
           },
           user?.id || ""
         );
@@ -89,7 +93,6 @@ export function WriteNoteProvider({
     });
   }, [
     initialNote?.id,
-    initialNote?.color,
     initialNote?.userId,
     updateNote,
     noteContent,
@@ -113,6 +116,14 @@ export function WriteNoteProvider({
   }, [debounceVisibility]);
 
   useEffect(() => {
+    if (!hasMounted) return;
+
+    if (debounceColor !== initialNote?.visibility || debounceColor) {
+      handleUpdateNoteContent();
+    }
+  }, [debounceColor]);
+
+  useEffect(() => {
     setHasMounted(true);
   }, []);
 
@@ -126,6 +137,8 @@ export function WriteNoteProvider({
       note: initialNote,
       visibility,
       setVisibility,
+      color,
+      setColor,
     }),
     [
       noteContent,
@@ -136,6 +149,8 @@ export function WriteNoteProvider({
       initialNote,
       visibility,
       setVisibility,
+      color,
+      setColor,
     ]
   );
 

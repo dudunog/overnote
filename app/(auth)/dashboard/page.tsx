@@ -1,7 +1,6 @@
 import NewNoteFloatingButton from "@/components/new-note-floating-button";
 import NotesList from "@/components/notes-list";
 import { Separator } from "@/components/ui/separator";
-import ViewNotesLink from "@/components/view-notes-link";
 import { api } from "@/data/api";
 import { auth } from "@/lib/auth";
 import { Note } from "@/types/note";

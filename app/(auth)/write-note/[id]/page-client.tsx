@@ -13,6 +13,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useTransition } from "react";
 import { motion } from "framer-motion";
 import { useNotes } from "@/hooks/use-notes";
+import { SelectColorPopover } from "@/components/select-color-popover";
 
 function Skeleton() {
   return (
@@ -20,6 +21,9 @@ function Skeleton() {
       <div className="mb-7 flex flex-col gap-5 justify-between w-full md:flex-row md:gap-10">
         <div className="h-10 w-80 aspect-video rounded-xl bg-muted/50" />
         <div className="h-10 w-20 aspect-video rounded-xl bg-muted/50" />
+      </div>
+      <div className="mb-5">
+        <div className="h-10 w-28 aspect-video rounded-xl bg-muted/50" />
       </div>
       <div className="mb-2 flex flex-col gap-2 justify-between md:flex-row md:items-center md:gap-5">
         <div className="h-10 w-60 aspect-video rounded-xl bg-muted/50" />
@@ -90,7 +94,7 @@ export default function UpdateNotePageClient({
           variants={{ visible: { transition: { staggerChildren: 0.15 } } }}
         >
           <motion.div
-            className="mb-7 flex flex-col gap-5 justify-between w-full md:flex-row md:gap-10"
+            className="mb-4 flex flex-col gap-5 justify-between w-full sm:flex-row sm:gap-10 sm:mb-7"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, ease: "easeOut" }}
@@ -100,14 +104,28 @@ export default function UpdateNotePageClient({
               <Lightbulb size={30} />
             </div>
 
+            {note?.canEdit && note.userId === user?.id && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                <ShareNotePopover />
+              </motion.div>
+            )}
+          </motion.div>
+
+          {note?.canEdit && (
             <motion.div
+              className="mb-5"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              transition={{ duration: 0.5, delay: 0.3 }}
             >
-              <ShareNotePopover />
+              <SelectColorPopover />
             </motion.div>
-          </motion.div>
+          )}
+
           <motion.div
             className="mb-2 flex flex-col gap-2 justify-between md:flex-row md:items-center md:gap-5"
             initial={{ opacity: 0, y: 10 }}

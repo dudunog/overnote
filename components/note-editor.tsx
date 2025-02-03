@@ -6,8 +6,14 @@ import { EditorEvents } from "@tiptap/react";
 import { useCallback } from "react";
 
 export default function NoteEditor() {
-  const { note, noteContent, setNoteContent, isEditorReady, setIsEditorReady } =
-    useWriteNote();
+  const {
+    note,
+    color,
+    noteContent,
+    setNoteContent,
+    isEditorReady,
+    setIsEditorReady,
+  } = useWriteNote();
 
   const handleUpdateContent = useCallback(
     (props: EditorEvents["update"]) => {
@@ -21,6 +27,7 @@ export default function NoteEditor() {
       initialContent={noteContent}
       isEditorReady={isEditorReady}
       editable={note?.canEdit}
+      editorBackgroundColor={color}
       onEditorIsReady={() => setIsEditorReady(true)}
       onUpdateContent={handleUpdateContent}
     />
