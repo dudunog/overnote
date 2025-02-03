@@ -10,12 +10,12 @@ export default async function Page() {
     <WriteNoteProvider
       initialNote={
         {
-          userId: "",
+          userId: session?.user?.id,
         } as Note
       }
       user={session?.user}
     >
-      <WriteNotePageClient user={session?.user ?? {}} />
+      <WriteNotePageClient />
     </WriteNoteProvider>
   );
 }
