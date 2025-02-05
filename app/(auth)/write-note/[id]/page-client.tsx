@@ -10,7 +10,7 @@ import { getAvatarFallback } from "@/lib/get-avatar-fallback";
 import { Lightbulb } from "lucide-react";
 import { User } from "next-auth";
 import { useRouter } from "next/navigation";
-import { useCallback, useTransition } from "react";
+import { useCallback, useMemo, useTransition } from "react";
 import { motion } from "framer-motion";
 import { useNotes } from "@/hooks/use-notes";
 import { SelectColorPopover } from "@/components/select-color-popover";
@@ -61,11 +61,16 @@ export default function UpdateNotePageClient({
     });
 
     router.push("/my-notes");
-  }, [deleteNote, user]);
+  }, [deleteNote, note?.id, router, user?.id]);
 
   const name = note?.user?.name ?? note?.user?.email;
 
   const avatarFallback = getAvatarFallback(name || "");
+
+  const isUserNoteOwner = useMemo(
+    () => user?.id === note?.userId,
+    [note?.userId, user?.id]
+  );
 
   if (isFetchNoteError?.error) {
     return (
@@ -133,17 +138,22 @@ export default function UpdateNotePageClient({
             transition={{ duration: 0.5, delay: 0.3 }}
           >
             <div className="flex items-center gap-2">
-              <span className="font-semibold">Created by:</span>
-              <Avatar className="h-8 w-8 rounded-lg">
-                {user?.image && (
-                  <AvatarImage src={user?.image} alt={name || "User avatar"} />
-                )}
-                <AvatarFallback className="rounded-lg">
-                  {avatarFallback}
-                </AvatarFallback>
-              </Avatar>
-              <span className="font-medium">
-                {user?.id === note?.userId ? "Você" : name}
+              <span>Created by</span>
+              {!isUserNoteOwner && (
+                <Avatar className="h-8 w-8 rounded-lg">
+                  {user?.image && (
+                    <AvatarImage
+                      src={user?.image}
+                      alt={name || "User avatar"}
+                    />
+                  )}
+                  <AvatarFallback className="rounded-lg">
+                    {avatarFallback}
+                  </AvatarFallback>
+                </Avatar>
+              )}
+              <span className="font-semibold">
+                {isUserNoteOwner ? "you" : name}
               </span>
             </div>
             {note && (
