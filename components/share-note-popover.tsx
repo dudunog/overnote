@@ -6,7 +6,7 @@ import {
 } from "@/components/ui/popover";
 import { Copy } from "lucide-react";
 import { Separator } from "./ui/separator";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
 import { useWriteNote } from "@/contexts/write-note-context";
 import {
@@ -23,12 +23,19 @@ import { env } from "@/env";
 export function ShareNotePopover() {
   const { toast } = useToast();
   const { note, visibility, setVisibility } = useWriteNote();
+  const [showLink, setShowLink] = useState(false);
 
   const handleChangeVisibility = useCallback(
     (value: NoteVisibilityEnum) => {
       setVisibility(value);
+
+      if (["PUBLIC", "READ_ONLY"].includes(value)) {
+        setShowLink(true);
+      } else {
+        setShowLink(false);
+      }
     },
-    [setVisibility]
+    [setVisibility, setShowLink]
   );
 
   const handleCopyLink = useCallback(() => {
@@ -49,7 +56,7 @@ export function ShareNotePopover() {
           Share
         </Button>
       </PopoverTrigger>
-      <PopoverContent className="w-[370px] mr-6">
+      <PopoverContent className="w-[380px] mr-6">
         <div className="grid gap-4">
           <div className="flex gap-3 items-center justify-between">
             <div className="space-y-2">
@@ -69,28 +76,24 @@ export function ShareNotePopover() {
               </SelectTrigger>
               <SelectContent>
                 <SelectGroup>
-                  <SelectItem value="PRIVATE">Privado</SelectItem>
+                  <SelectItem value="PRIVATE">Private</SelectItem>
                   <SelectItem value="PUBLIC">Public</SelectItem>
-                  <SelectItem value="READ_ONLY">Read-Only Access</SelectItem>
+                  <SelectItem value="READ_ONLY">Read-Only</SelectItem>
                 </SelectGroup>
               </SelectContent>
             </Select>
           </div>
-          <Separator />
-          <div className="grid gap-2">
-            <div className="mb-5 flex items-center gap-2 justify-between">
-              <div className="flex flex-col">
-                Allow public viewers
-                <p className="text-sm">Anyone with the link can view only</p>
-              </div>
-            </div>
-          </div>
         </div>
 
-        <Button className="w-full" onClick={handleCopyLink}>
-          <Copy />
-          Copy Link
-        </Button>
+        {showLink && (
+          <>
+            <Separator className="my-3" />
+            <Button className="w-full" onClick={handleCopyLink}>
+              <Copy />
+              Copy Link
+            </Button>
+          </>
+        )}
       </PopoverContent>
     </Popover>
   );
