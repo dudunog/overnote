@@ -10,12 +10,12 @@ import { useRouter } from "next/navigation";
 import {
   createContext,
   ReactNode,
-  startTransition,
   useCallback,
   useContext,
   useEffect,
   useMemo,
   useState,
+  useTransition,
 } from "react";
 
 interface IWriteNoteContext {
@@ -29,6 +29,7 @@ interface IWriteNoteContext {
   setVisibility: (visibility: NoteVisibilityEnum) => void;
   color: string;
   setColor: (color: string) => void;
+  isLoading: boolean;
 }
 
 const WriteNoteContext = createContext<IWriteNoteContext>(
@@ -60,10 +61,11 @@ export function WriteNoteProvider({
   const debounceVisibility = useDebounce(visibility, 700);
   const debounceColor = useDebounce(color, 700);
 
-  const { createNote, updateNote } = useNotes();
   const router = useRouter();
+  const { createNote, updateNote } = useNotes();
+  const [isLoading, startTransition] = useTransition();
 
-  const handleUpdateNoteContent = useCallback(() => {
+  const saveNoteContent = useCallback(() => {
     startTransition(async () => {
       const noteExists = initialNote?.id;
 
@@ -74,7 +76,7 @@ export function WriteNoteProvider({
             content: noteContent,
             color: color || "",
             visibility: visibility,
-            userId: initialNote.userId || "",
+            userId: initialNote?.userId || "",
           },
           user?.id || ""
         );
@@ -96,6 +98,8 @@ export function WriteNoteProvider({
     initialNote?.userId,
     updateNote,
     noteContent,
+    color,
+    user?.id,
     visibility,
     createNote,
     router,
@@ -103,7 +107,7 @@ export function WriteNoteProvider({
 
   useEffect(() => {
     if (debounceContent && noteContent !== initialNote?.content) {
-      handleUpdateNoteContent();
+      saveNoteContent();
     }
   }, [debounceContent]);
 
@@ -111,7 +115,7 @@ export function WriteNoteProvider({
     if (!hasMounted) return;
 
     if (debounceVisibility !== initialNote?.visibility || debounceVisibility) {
-      handleUpdateNoteContent();
+      saveNoteContent();
     }
   }, [debounceVisibility]);
 
@@ -119,7 +123,7 @@ export function WriteNoteProvider({
     if (!hasMounted) return;
 
     if (debounceColor !== initialNote?.visibility || debounceColor) {
-      handleUpdateNoteContent();
+      saveNoteContent();
     }
   }, [debounceColor]);
 
@@ -139,6 +143,7 @@ export function WriteNoteProvider({
       setVisibility,
       color,
       setColor,
+      isLoading,
     }),
     [
       noteContent,
@@ -151,6 +156,7 @@ export function WriteNoteProvider({
       setVisibility,
       color,
       setColor,
+      isLoading,
     ]
   );
 

@@ -53,13 +53,7 @@ export function useNotes() {
         }
       );
 
-      if (response.ok) {
-        toast({
-          variant: "primary",
-          description: "Note updated successfully!",
-          duration: 3000,
-        });
-      } else {
+      if (!response.ok) {
         throw new Error("Error updating note");
       }
 

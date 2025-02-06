@@ -14,6 +14,7 @@ import { useCallback, useMemo, useTransition } from "react";
 import { motion } from "framer-motion";
 import { useNotes } from "@/hooks/use-notes";
 import { SelectColorPopover } from "@/components/select-color-popover";
+import Loading from "@/components/loading";
 
 function Skeleton() {
   return (
@@ -46,7 +47,7 @@ interface UpdateNotePageClientProps {
 export default function UpdateNotePageClient({
   user,
 }: UpdateNotePageClientProps) {
-  const { note, isFetchNoteError, isEditorReady } = useWriteNote();
+  const { note, isFetchNoteError, isEditorReady, isLoading } = useWriteNote();
   const { deleteNote } = useNotes();
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
@@ -122,12 +123,14 @@ export default function UpdateNotePageClient({
 
           {note?.canEdit && (
             <motion.div
-              className="mb-5"
+              className="mb-5 flex items-center gap-2 justify-between"
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5, delay: 0.3 }}
             >
               <SelectColorPopover />
+
+              {(isLoading || isPending) && <Loading size={20} />}
             </motion.div>
           )}
 
