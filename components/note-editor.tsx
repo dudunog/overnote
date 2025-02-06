@@ -13,13 +13,16 @@ export default function NoteEditor() {
     setNoteContent,
     isEditorReady,
     setIsEditorReady,
+    lastCursorPosition,
+    setLastCursorPosition,
   } = useWriteNote();
 
   const handleUpdateContent = useCallback(
     (props: EditorEvents["update"]) => {
       setNoteContent(props.editor.getHTML());
+      setLastCursorPosition(props.editor.state.selection.anchor);
     },
-    [setNoteContent]
+    [setNoteContent, setLastCursorPosition]
   );
 
   return (
@@ -28,8 +31,9 @@ export default function NoteEditor() {
       isEditorReady={isEditorReady}
       editable={note?.canEdit}
       editorBackgroundColor={color}
+      initialCursorPosition={lastCursorPosition}
       onEditorIsReady={() => setIsEditorReady(true)}
-      onUpdateContent={handleUpdateContent}
+      onChangeContent={handleUpdateContent}
     />
   );
 }

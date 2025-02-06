@@ -65,17 +65,18 @@ enum Visibility {
 }
 
 model Note {
-  id          String       @id @default(cuid())
-  content     String
-  color       String
-  visibility  Visibility   @default(PRIVATE)
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
+  id                  String       @id @default(cuid())
+  content             String
+  color               String
+  visibility          Visibility   @default(PRIVATE)
+  lastCursorPosition  Int          @default(1)
+  createdAt           DateTime     @default(now()) @map("created_at")
+  updatedAt           DateTime     @updatedAt @map("updated_at")
 
-  userId      String
-  user        User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId              String
+  user                User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  shared_with SharedNote[] @relation("NoteSharedWith")
+  shared_with         SharedNote[] @relation("NoteSharedWith")
 }
 
 model SharedNote {

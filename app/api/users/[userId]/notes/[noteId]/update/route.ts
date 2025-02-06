@@ -20,12 +20,13 @@ export async function PUT(req: Request, { params }: ParamsProps) {
   }
 
   try {
-    const { id, content, color, visibility, userId } = z
+    const { id, content, color, visibility, lastCursorPosition, userId } = z
       .object({
         id: z.string(),
         content: z.string(),
         color: z.string(),
         visibility: z.enum(NoteVisibility),
+        lastCursorPosition: z.number(),
         userId: z.string(),
       })
       .parse({
@@ -33,6 +34,7 @@ export async function PUT(req: Request, { params }: ParamsProps) {
         content: body.content,
         color: body.color,
         visibility: body.visibility,
+        lastCursorPosition: body.lastCursorPosition,
         userId: userIdParam,
       });
 
@@ -53,6 +55,7 @@ export async function PUT(req: Request, { params }: ParamsProps) {
         content,
         color,
         visibility,
+        lastCursorPosition,
       },
       where: {
         id,

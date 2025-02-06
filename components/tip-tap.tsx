@@ -8,14 +8,16 @@ import TaskItem from "@tiptap/extension-task-item";
 import TaskList from "@tiptap/extension-task-list";
 import CharacterCount from "@tiptap/extension-character-count";
 import { cn } from "@/lib/utils";
+import { useEffect, useRef, useState } from "react";
 
 interface TiptapProps {
   initialContent?: string;
   isEditorReady: boolean;
   editable?: boolean;
   editorBackgroundColor?: string;
-  onEditorIsReady: () => void;
-  onUpdateContent: (props: EditorEvents["update"]) => void;
+  initialCursorPosition?: number;
+  onEditorIsReady?: () => void;
+  onChangeContent: (props: EditorEvents["update"]) => void;
 }
 
 const Tiptap = ({
@@ -23,9 +25,13 @@ const Tiptap = ({
   isEditorReady,
   editable = true,
   editorBackgroundColor,
+  initialCursorPosition = 1,
   onEditorIsReady,
-  onUpdateContent,
+  onChangeContent,
 }: TiptapProps) => {
+  const [editorIsReady, setEditorIsReady] = useState(false);
+  const firstRender = useRef(true);
+
   const editor = useEditor({
     extensions: [
       StarterKit.configure(),
@@ -39,9 +45,20 @@ const Tiptap = ({
     autofocus: true,
     editable: editable,
     content: initialContent || undefined,
-    onCreate: onEditorIsReady,
-    onUpdate: onUpdateContent,
+    onCreate: () => {
+      onEditorIsReady?.();
+      setEditorIsReady(true);
+    },
+    onUpdate: onChangeContent,
   });
+
+  useEffect(() => {
+    if (editorIsReady && firstRender?.current) {
+      editor?.commands.focus(initialCursorPosition);
+
+      firstRender.current = false;
+    }
+  }, [editorIsReady, initialCursorPosition, firstRender, editor?.commands]);
 
   if (!isEditorReady) {
     return (

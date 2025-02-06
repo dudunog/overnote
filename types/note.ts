@@ -11,6 +11,7 @@ export interface Note {
   content: string;
   color: string;
   visibility: NoteVisibilityEnum;
+  lastCursorPosition: number;
   userId: string;
   user: {
     name: string;

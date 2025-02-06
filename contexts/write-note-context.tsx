@@ -19,16 +19,18 @@ import {
 } from "react";
 
 interface IWriteNoteContext {
+  note: Note | undefined;
   noteContent: string;
   setNoteContent: (noteContent: string) => void;
+  color: string;
+  setColor: (color: string) => void;
+  visibility: NoteVisibilityEnum;
+  setVisibility: (visibility: NoteVisibilityEnum) => void;
+  lastCursorPosition: number;
+  setLastCursorPosition: (lastCursorPosition: number) => void;
   isEditorReady: boolean;
   setIsEditorReady: (isEditorReady: boolean) => void;
   isFetchNoteError: ApiRequestError | undefined;
-  note: Note | undefined;
-  visibility: NoteVisibilityEnum;
-  setVisibility: (visibility: NoteVisibilityEnum) => void;
-  color: string;
-  setColor: (color: string) => void;
   isLoading: boolean;
 }
 
@@ -50,10 +52,13 @@ export function WriteNoteProvider({
   children,
 }: WriteNoteProviderProps) {
   const [noteContent, setNoteContent] = useState(initialNote?.content || "");
+  const [color, setColor] = useState(initialNote?.color || "");
   const [visibility, setVisibility] = useState(
     initialNote?.visibility ?? NoteVisibilityEnum.PRIVATE
   );
-  const [color, setColor] = useState(initialNote?.color || "");
+  const [lastCursorPosition, setLastCursorPosition] = useState(
+    initialNote?.lastCursorPosition || 1
+  );
   const [isEditorReady, setIsEditorReady] = useState(false);
   const [hasMounted, setHasMounted] = useState(false);
 
@@ -76,6 +81,7 @@ export function WriteNoteProvider({
             content: noteContent,
             color: color || "",
             visibility: visibility,
+            lastCursorPosition,
             userId: initialNote?.userId || "",
           },
           user?.id || ""
@@ -85,6 +91,7 @@ export function WriteNoteProvider({
           content: noteContent,
           color: getRandomColor(),
           visibility: visibility as NoteVisibilityEnum,
+          lastCursorPosition,
           userId: initialNote?.userId || "",
         });
 
@@ -101,6 +108,7 @@ export function WriteNoteProvider({
     color,
     user?.id,
     visibility,
+    lastCursorPosition,
     createNote,
     router,
   ]);
@@ -133,29 +141,33 @@ export function WriteNoteProvider({
 
   const contextValue: IWriteNoteContext = useMemo(
     () => ({
+      note: initialNote,
       noteContent,
       setNoteContent,
+      color,
+      setColor,
+      visibility,
+      setVisibility,
+      lastCursorPosition,
+      setLastCursorPosition,
       isEditorReady,
       setIsEditorReady,
       isFetchNoteError,
-      note: initialNote,
-      visibility,
-      setVisibility,
-      color,
-      setColor,
       isLoading,
     }),
     [
+      initialNote,
       noteContent,
       setNoteContent,
+      color,
+      setColor,
+      visibility,
+      setVisibility,
+      lastCursorPosition,
+      setLastCursorPosition,
       isEditorReady,
       setIsEditorReady,
       isFetchNoteError,
-      initialNote,
-      visibility,
-      setVisibility,
-      color,
-      setColor,
       isLoading,
     ]
   );

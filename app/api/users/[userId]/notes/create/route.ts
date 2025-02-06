@@ -19,17 +19,19 @@ export async function POST(req: Request, { params }: ParamsProps) {
   }
 
   try {
-    const { content, color, visibility, userId } = z
+    const { content, color, visibility, lastCursorPosition, userId } = z
       .object({
         content: z.string(),
         color: z.string(),
         visibility: z.enum(NoteVisibility),
+        lastCursorPosition: z.number(),
         userId: z.string(),
       })
       .parse({
         content: body.content,
         color: body.color,
         visibility: body.visibility,
+        lastCursorPosition: body.lastCursorPosition,
         userId: userIdParam,
       });
 
@@ -38,6 +40,7 @@ export async function POST(req: Request, { params }: ParamsProps) {
         content,
         color,
         visibility,
+        lastCursorPosition,
         userId,
       },
     });
