@@ -15,6 +15,7 @@ import { motion } from "framer-motion";
 import { useNotes } from "@/hooks/use-notes";
 import { SelectColorPopover } from "@/components/select-color-popover";
 import Loading from "@/components/loading";
+import Link from "next/link";
 
 function Skeleton() {
   return (
@@ -52,10 +53,6 @@ export default function UpdateNotePageClient({
   const router = useRouter();
   const [isPending, startTransition] = useTransition();
 
-  const handleGoHome = useCallback(() => {
-    router.push("/dashboard");
-  }, [router]);
-
   const handleDeleteNote = useCallback(() => {
     startTransition(async () => {
       await deleteNote(note?.id || "");
@@ -83,9 +80,9 @@ export default function UpdateNotePageClient({
           </span>
         </div>
 
-        <Button className="mt-5" onClick={handleGoHome}>
-          Go dashboard
-        </Button>
+        <Link href="/dashboard">
+          <Button className="mt-5">Go dashboard</Button>
+        </Link>
       </div>
     );
   }
