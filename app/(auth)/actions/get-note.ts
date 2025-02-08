@@ -1,16 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { ActionError } from "@/types/api";
-import { Note, User } from "@prisma/client";
+import { Note } from "@prisma/client";
 
 export interface NoteWithUser extends Note {
-  user: User;
+  user: {
+    name: string | null;
+    email: string | null;
+  };
   canEdit: boolean;
 }
 
 export async function getNote(
   noteId: string,
   userId: string
-): Promise<Note | ActionError> {
+): Promise<NoteWithUser | ActionError> {
   const note = await prisma.note.findUnique({
     where: {
       id: noteId,

@@ -1,7 +1,7 @@
 import { WriteNoteProvider } from "@/contexts/write-note-context";
-import { Note } from "@/types/note";
 import { auth } from "@/lib/auth";
 import WriteNotePageClient from "./page-client";
+import { NoteWithUser } from "@/app/(auth)/actions/get-note";
 
 export default async function Page() {
   const session = await auth();
@@ -11,7 +11,7 @@ export default async function Page() {
       initialNote={
         {
           userId: session?.user?.id,
-        } as Note
+        } as NoteWithUser
       }
       user={session?.user}
     >
