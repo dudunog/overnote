@@ -1,10 +1,15 @@
 "use client";
 
-import { api } from "@/data/api";
 import { useToast } from "@/hooks/use-toast";
-import { Note } from "@/types/note";
+import { Note } from "@prisma/client";
+import { createNote as createNoteAction } from "@/app/(auth)/actions/create-note";
+import { updateNote as updateNoteAction } from "@/app/(auth)/actions/update-note";
+import { deleteNote as deleteNoteAction } from "@/app/(auth)/actions/delete-note";
 
-type CreateNoteDTO = Omit<Note, "id" | "user" | "createdAt" | "updatedAt">;
+export type CreateNoteDTO = Omit<
+  Note,
+  "id" | "user" | "createdAt" | "updatedAt"
+>;
 
 export type UpdateNoteDTO = Omit<Note, "user" | "createdAt" | "updatedAt">;
 
@@ -15,12 +20,9 @@ export function useNotes() {
     noteData: CreateNoteDTO
   ): Promise<Note | undefined> {
     try {
-      const response = await api(`/users/${noteData.userId}/notes/create`, {
-        method: "POST",
-        body: JSON.stringify(noteData),
-      });
+      const response = await createNoteAction(noteData);
 
-      if (response.ok) {
+      if (response) {
         toast({
           variant: "primary",
           description: "Note created successfully!",
@@ -28,7 +30,7 @@ export function useNotes() {
         });
       }
 
-      return await response.json();
+      return response;
     } catch (error) {
       toast({
         variant: "destructive",
@@ -45,19 +47,13 @@ export function useNotes() {
     userId: string
   ): Promise<Note | undefined> {
     try {
-      const response = await api(
-        `/users/${userId}/notes/${noteData.id}/update`,
-        {
-          method: "PUT",
-          body: JSON.stringify(noteData),
-        }
-      );
+      const response = await updateNoteAction(noteData, userId);
 
-      if (!response.ok) {
+      if (!response) {
         throw new Error("Error updating note");
       }
 
-      return await response.json();
+      return response;
     } catch (error) {
       toast({
         variant: "destructive",
@@ -69,21 +65,17 @@ export function useNotes() {
     }
   }
 
-  async function deleteNote(noteId: string, userId: string): Promise<void> {
+  async function deleteNote(noteId: string): Promise<void> {
     try {
-      const response = await api(`/users/${userId}/notes/${noteId}/delete`, {
-        method: "DELETE",
-      });
+      const response = await deleteNoteAction(noteId);
 
-      if (response.ok) {
+      if (response) {
         toast({
           variant: "primary",
           description: "Note deleted successfully!",
           duration: 3000,
         });
       }
-
-      return await response.json();
     } catch (error) {
       toast({
         variant: "destructive",

@@ -1,3 +1,3 @@
-export interface ApiRequestError {
+export interface ActionError {
   error: string;
 }

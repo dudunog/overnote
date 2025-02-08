@@ -58,11 +58,11 @@ export default function UpdateNotePageClient({
 
   const handleDeleteNote = useCallback(() => {
     startTransition(async () => {
-      await deleteNote(note?.id || "", user?.id || "");
+      await deleteNote(note?.id || "");
     });
 
     router.push("/my-notes");
-  }, [deleteNote, note?.id, router, user?.id]);
+  }, [deleteNote, note?.id, router]);
 
   const name = note?.user?.name ?? note?.user?.email;
 

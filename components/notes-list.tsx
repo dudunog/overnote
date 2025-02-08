@@ -1,6 +1,6 @@
 "use client";
 
-import { Note } from "@/types/note";
+import { Note } from "@prisma/client";
 import { truncate } from "@/lib/truncate";
 import { useRouter } from "next/navigation";
 import { useCallback } from "react";

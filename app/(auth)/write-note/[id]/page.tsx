@@ -1,19 +1,7 @@
-import { api } from "@/data/api";
-import { Note } from "@/types/note";
 import { WriteNoteProvider } from "@/contexts/write-note-context";
 import UpdateNotePageClient from "./page-client";
 import { auth } from "@/lib/auth";
-import { ApiRequestError } from "@/types/api";
-
-async function getNote(
-  noteId: string,
-  userId: string
-): Promise<Note | ApiRequestError> {
-  const response = await api(`/users/${userId}/notes/${noteId}`, {
-    cache: "no-cache",
-  });
-  return await response.json();
-}
+import { getNote } from "@/app/(auth)/actions/get-note";
 
 interface PageProps {
   params: { id: string };

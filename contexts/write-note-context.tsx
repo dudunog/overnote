@@ -1,10 +1,11 @@
 "use client";
 
+import { NoteWithUser } from "@/app/(auth)/actions/get-note";
 import { useDebounce } from "@/hooks/use-debounce";
 import { useNotes } from "@/hooks/use-notes";
 import { getRandomColor } from "@/lib/colors";
-import { ApiRequestError } from "@/types/api";
-import { Note, NoteVisibilityEnum } from "@/types/note";
+import { ActionError } from "@/types/api";
+import { Visibility } from "@prisma/client";
 import { User } from "next-auth";
 import { useRouter } from "next/navigation";
 import {
@@ -19,18 +20,18 @@ import {
 } from "react";
 
 interface IWriteNoteContext {
-  note: Note | undefined;
+  note: NoteWithUser | undefined;
   noteContent: string;
   setNoteContent: (noteContent: string) => void;
   color: string;
   setColor: (color: string) => void;
-  visibility: NoteVisibilityEnum;
-  setVisibility: (visibility: NoteVisibilityEnum) => void;
+  visibility: Visibility;
+  setVisibility: (visibility: Visibility) => void;
   lastCursorPosition: number;
   setLastCursorPosition: (lastCursorPosition: number) => void;
   isEditorReady: boolean;
   setIsEditorReady: (isEditorReady: boolean) => void;
-  isFetchNoteError: ApiRequestError | undefined;
+  isFetchNoteError: ActionError | undefined;
   isLoading: boolean;
 }
 
@@ -39,8 +40,8 @@ const WriteNoteContext = createContext<IWriteNoteContext>(
 );
 
 interface WriteNoteProviderProps {
-  initialNote: Note | undefined;
-  isFetchNoteError?: ApiRequestError;
+  initialNote: NoteWithUser | undefined;
+  isFetchNoteError?: ActionError;
   user?: User;
   children: ReactNode;
 }
@@ -53,8 +54,8 @@ export function WriteNoteProvider({
 }: WriteNoteProviderProps) {
   const [noteContent, setNoteContent] = useState(initialNote?.content || "");
   const [color, setColor] = useState(initialNote?.color || "");
-  const [visibility, setVisibility] = useState(
-    initialNote?.visibility ?? NoteVisibilityEnum.PRIVATE
+  const [visibility, setVisibility] = useState<Visibility>(
+    initialNote?.visibility ?? Visibility.PRIVATE
   );
   const [lastCursorPosition, setLastCursorPosition] = useState(
     initialNote?.lastCursorPosition || 1
@@ -90,7 +91,7 @@ export function WriteNoteProvider({
         const createdNote = await createNote({
           content: noteContent,
           color: getRandomColor(),
-          visibility: visibility as NoteVisibilityEnum,
+          visibility,
           lastCursorPosition,
           userId: initialNote?.userId || "",
         });

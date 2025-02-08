@@ -14,7 +14,7 @@ export default function ViewNotesLink({ linkText, url }: ViewNotesLinkProps) {
 
   const handleGoToNotesPage = useCallback(() => {
     router.push(url);
-  }, [router]);
+  }, [router, url]);
 
   return (
     <Button

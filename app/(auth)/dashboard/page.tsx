@@ -1,24 +1,10 @@
 import NewNoteFloatingButton from "@/components/new-note-floating-button";
 import NotesList from "@/components/notes-list";
 import { Separator } from "@/components/ui/separator";
-import { api } from "@/data/api";
 import { auth } from "@/lib/auth";
-import { Note } from "@/types/note";
 import { StickyNote } from "lucide-react";
-
-async function getNotes(userId: string): Promise<Note[]> {
-  const response = await api(`/users/${userId}/notes`, {
-    cache: "no-cache",
-  });
-  return await response.json();
-}
-
-async function getSharedNotes(userId: string): Promise<Note[]> {
-  const response = await api(`/users/${userId}/shared-notes`, {
-    cache: "no-cache",
-  });
-  return await response.json();
-}
+import { getNotes } from "@/app/(auth)/actions/get-notes";
+import { getSharedNotes } from "../actions/get-shared-notes";
 
 export default async function Page() {
   const session = await auth();
